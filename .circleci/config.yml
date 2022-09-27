@@ -1,0 +1,64 @@
+name: CI
+on: 
+  #triggers the workflow on push or pull request but only on the master branch
+  push:
+    branches: [ main ]
+  #allow u to run workflow manually from the actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  push_to_Docker_Hub:
+    #The type of runner that the job will run on
+    runs-on: self-hosted
+    strategy: 
+      matrix: 
+        node-version: [16.x]
+    #Build docker image and push to docker hub
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v1
+
+    - run:
+        name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+
+    - run:
+        name: Build Docker image
+        command: |
+          docker image prune --all
+          docker-compose -f docker-compose-build.yaml build --parallel
+
+    - run:
+        name: setup tags for udagram-api-user
+        command: |
+          docker tag udagram-api-user achilis/udagram-api-user
+
+    - run:
+        name: setup tags for udagram-api-feed
+        command: |
+          docker tag udagram-api-feed achilis/udagram-api-feed
+
+    - run:
+        name: setup tags for reverseproxy
+        command: |
+          docker tag reverseproxy achilis/reverseproxy
+
+    - run:
+        name: setup tags for udaram-frontend
+        command: |
+          docker tag udagram-frontend achilis/udagram-frontend
+
+    - run:
+        name: Push to DockerHub
+        command: |
+          docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+          docker push achilis/udagram-api-user
+          docker push achilis/udagram-api-feed
+          docker push achilis/reverseproxy
+          docker push achilis/udagram-udaram-frontend
