@@ -2,6 +2,113 @@ version: 2.1
 
 executors:
   docker-publisher:
+    environment:
+      
+    docker:
+      - image: docker:stable
+
+jobs:
+  build:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+        name: Build Docker image
+        command: |
+          docker image prune --all
+          docker-compose -f docker-compose-build.yaml build --parallel
+      - run:
+          name: setup tags for udagram-api-user
+          command: docker tag udagram-api-user achilis/udagram-api-user
+
+      - run:
+          name: setup tags for udagram-api-feed
+          command: docker tag udagram-api-feed achilis/udagram-api-feed
+
+      - run:
+          name: setup tags for reverseproxy
+          command: docker tag reverseproxy achilis/reverseproxy
+
+      - run:
+          name: setup tags for udaram-frontend
+          command: docker tag udagram-frontend achilis/udagram-frontend
+
+
+      - run:
+          name: Build Docker image
+          command: docker build --tag "${IMAGE_TAG}" .
+      - run:
+          name: Archive Docker image
+          command: docker save --output image.tar "${IMAGE_TAG}"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+      - deploy:
+          name: Push application Docker image
+          command: |
+            docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+            docker push achilis/udagram-api-user
+            docker push achilis/udagram-api-feed
+            docker push achilis/reverseproxy
+            docker push achilis/udagram-udaram-frontend
+
+workflows:
+  version: 2
+  build-push:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: main
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+version: 2.1
+
+executors:
+  docker-publisher:
     docker:
       - image: docker:stable
 
