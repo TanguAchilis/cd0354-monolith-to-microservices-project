@@ -33,7 +33,7 @@ jobs:
             docker push achilis/udagram-api-user
             docker push achilis/udagram-api-feed
             docker push achilis/reverseproxy
-            docker push achilis/udagram-udaram-frontend
+            docker push achilis/udagram-frontend
 workflows:
   version: 2
   build-push:
