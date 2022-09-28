@@ -11,9 +11,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker image
-          command: |
-            docker image prune --all
-            docker-compose -f docker-compose-build.yaml build --parallel
+          command: docker-compose -f docker-compose-build.yaml build --parallel
       - run:
           name: setup tags for udagram-api-user
           command: docker tag udagram-api-user achilis/udagram-api-user
