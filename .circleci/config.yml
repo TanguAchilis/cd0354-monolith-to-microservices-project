@@ -22,7 +22,7 @@ jobs:
           name: setup tags for reverseproxy
           command: docker tag reverseproxy achilis/reverseproxy
       - run:
-          name: setup tags for udaram-frontend
+          name: setup tags for udagram-frontend
           command: docker tag udagram-frontend achilis/udagram-frontend
       - deploy:
           name: Push application Docker image
