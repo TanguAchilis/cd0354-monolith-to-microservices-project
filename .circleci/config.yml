@@ -1,3 +1,10 @@
+version: 2.1
+
+executors:
+  docker-publisher:
+    docker:
+      - image: docker:stable
+
 name: CI
 on: 
   #triggers the workflow on push or pull request but only on the master branch
@@ -18,15 +25,6 @@ jobs:
     steps:
     - name: checkout repo
       uses: actions/checkout@v1
-
-    - run:
-        name: Install Docker client
-          command: |
-            set -x
-            VER="17.03.0-ce"
-            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
-            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-            mv /tmp/docker/* /usr/bin
 
     - run:
         name: Build Docker image
