@@ -55,7 +55,6 @@ jobs:
             docker push achilis/udagram-udaram-frontend
 
 workflows:
-  version: 2
   build-push:
     jobs:
       - build:
