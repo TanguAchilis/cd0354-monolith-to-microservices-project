@@ -7,7 +7,7 @@ jobs:
           username: $DOCKERHUB_LOGIN
           password: $DOCKERHUB_PASSWORD 
     steps:
-      # ... steps for building/testing app ...
+      # ... steps for building app ...
       - checkout
       - setup_remote_docker:
           version: 20.10.14
