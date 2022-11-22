@@ -16,24 +16,24 @@ jobs:
           command: docker-compose -f docker-compose-build.yaml build --parallel
       - run:
           name: setup tags for udagram-api-user
-          command: docker tag udagram-api-user achilis/udagram-api-user
+          command: docker tag udagram-api-user achilis/udagram-api-user:v2
       - run:
           name: setup tags for udagram-api-feed
-          command: docker tag udagram-api-feed achilis/udagram-api-feed
+          command: docker tag udagram-api-feed achilis/udagram-api-feed:v2
       - run:
           name: setup tags for reverseproxy
-          command: docker tag reverseproxy achilis/reverseproxy
+          command: docker tag reverseproxy achilis/reverseproxy:v2
       - run:
           name: setup tags for udagram-frontend
-          command: docker tag udagram-frontend achilis/udagram-frontend
+          command: docker tag udagram-frontend achilis/udagram-frontend:v4a
       - deploy:
           name: Push application Docker image
           command: |
             docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
-            docker push achilis/udagram-api-user
-            docker push achilis/udagram-api-feed
-            docker push achilis/reverseproxy
-            docker push achilis/udagram-frontend
+            docker push achilis/udagram-api-user:v2
+            docker push achilis/udagram-api-feed:v2
+            docker push achilis/reverseproxy:v2
+            docker push achilis/udagram-frontend:v4a
 workflows:
   version: 2
   build-push:
